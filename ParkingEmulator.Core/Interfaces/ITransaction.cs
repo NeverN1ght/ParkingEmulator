@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ParkingEmulator.Core.Entities;
+using System;
 
 namespace ParkingEmulator.Core.Interfaces
 {
@@ -8,6 +9,8 @@ namespace ParkingEmulator.Core.Interfaces
 
         int CarId { get; set; }
 
-        decimal DebitedFunds { get; set; }
+        decimal Funds { get; set; }
+
+        TransactionType Type { get; set; }
     }
 }

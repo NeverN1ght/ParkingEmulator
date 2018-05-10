@@ -43,6 +43,7 @@
     <Compile Include="Entities\Car.cs" />
     <Compile Include="Entities\CarType.cs" />
     <Compile Include="Entities\Transaction.cs" />
+    <Compile Include="Entities\TransactionType.cs" />
     <Compile Include="Interfaces\ICar.cs" />
     <Compile Include="Interfaces\ITransaction.cs" />
     <Compile Include="Kernel\Parking.cs" />

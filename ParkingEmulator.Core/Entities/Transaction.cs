@@ -9,6 +9,17 @@ namespace ParkingEmulator.Core.Entities
 
         public int CarId { get; set; }
 
-        public decimal DebitedFunds { get; set; }
+        public decimal Funds { get; set; }
+
+        public TransactionType Type { get; set; }
+
+
+        public Transaction(DateTime transactionTime, int carId, decimal funds, TransactionType type)
+        {
+            TransactionTime = transactionTime;
+            CarId = carId;
+            Funds = funds;
+            Type = type;
+        }
     }
 }

@@ -2,22 +2,17 @@
 using ParkingEmulator.Core.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Timers;
 
 namespace ParkingEmulator.Core.Kernel
 {
     public class Parking
     {
         private static readonly Lazy<Parking> lazy = new Lazy<Parking>(() => new Parking());
-
         public static Parking GetInstance { get { return lazy.Value; } }
 
-        private Parking()
-        {
-            this.Cars = new List<ICar>();
-            this.Transactions = new List<ITransaction>();
-        }
-
         //----
+
         public List<ICar> Cars { get; private set; }
 
         public List<ITransaction> Transactions { get; private set; }
@@ -25,57 +20,124 @@ namespace ParkingEmulator.Core.Kernel
         public decimal EarnedBalance { get; private set; }
 
         //----
+
+        private Parking()
+        {
+            Cars = new List<ICar>(); //need to load from db;
+            //EarnedBalance load or 0
+            Transactions = new List<ITransaction>();
+            DebitInit();
+        }
+       
+        //----
+
         public void AddCar(ICar car)
         {
-            this.Cars.Add(car);
+            if (Cars.Count + 1 <= Settings.ParkingSpace)
+            {
+                Cars.Add(car);
+            }
+            else
+            {
+                throw new Exception(); //implement
+            }
         }
 
         public void RemoveCar(ICar car)
         {
-            this.Cars.Remove(car);
-        }
-
-        public bool IsCarExist(int carId)
-        {
-            return this.Cars.Exists(c => c.Id == carId);
+            if (IsCarExist(car.Id))
+            {
+                Cars.Remove(car);
+            }
+            else
+            {
+                throw new Exception();//implement
+            }
         }
 
         public void AddBalance(int carId, decimal funds)
         {
-            var car = this.Cars.Find(c => c.Id == carId);
-            car.CarBalance += funds;
-        }
-
-        public void DebitFunts(ICar car) //can be extension
-        {
-            if (car.CarBalance - Settings.Prices[car.Type] >= 0)
+            if (IsCarExist(carId))
             {
-                car.CarBalance -= Settings.Prices[car.Type];
+                Cars.Find(c => c.Id == carId).CarBalance += funds;
+                AddTransaction(new Transaction(DateTime.Now, carId, funds, TransactionType.Deposit));
             }
             else
             {
-                car.CarBalance -= Settings.Prices[car.Type] * Settings.Fine;
+                throw new Exception(); //need to add NotFoundException
             }
         }
 
         public IEnumerable<ITransaction> GetLastMinuteTransactions()
         {
-            return this.Transactions.FindAll(t => DateTime.Now - t.TransactionTime <= TimeSpan.FromMinutes(1));
+            return Transactions.FindAll(t => DateTime.Now - t.TransactionTime <= TimeSpan.FromMinutes(1));
         }
 
-        public decimal GetTotalIncome()
+        public string[] GetAllTransactionsFromLog()
         {
-            return this.EarnedBalance;
+            return null;
         }
 
         public uint GetFreeParkingPlaces()
         {
-            return Settings.ParkingSpace - (uint)this.Cars.Count;
+            return Settings.ParkingSpace - (uint)Cars.Count;
         }
 
-        private void LogLastMinuteTransactions()
+        //----
+
+        private bool IsCarExist(int carId)
         {
-            //implement
+            return Cars.Exists(c => c.Id == carId);
+        }
+
+        private void AddTransaction(ITransaction transaction)
+        {
+            Transactions.Add(transaction);
+        }
+
+        private void DebitCar(ICar car)
+        {
+            if (car.CarBalance - Settings.Prices[car.Type] >= 0)
+            {
+                car.CarBalance -= Settings.Prices[car.Type];
+                EarnedBalance += Settings.Prices[car.Type];
+                AddTransaction(new Transaction(
+                    DateTime.Now, 
+                    car.Id, 
+                    Settings.Prices[car.Type], 
+                    TransactionType.Debit));   
+            }
+            else
+            {
+                car.CarBalance -= (decimal)((double)Settings.Prices[car.Type] * Settings.Fine);//fix
+                EarnedBalance += (decimal)((double)Settings.Prices[car.Type] * Settings.Fine);
+                AddTransaction(new Transaction(
+                    DateTime.Now, 
+                    car.Id, 
+                    Settings.Prices[car.Type], 
+                    TransactionType.Fine));                
+            }
+        }
+
+        private void DebitAllCars(object source, ElapsedEventArgs e)
+        {
+            if(Cars.Count > 0)
+            {
+                foreach (var car in Cars)
+                {
+                    DebitCar(car);
+                    Console.WriteLine(car.CarBalance);
+                }
+            }
+
+        }
+        
+        private void DebitInit()
+        {
+            var timer = new Timer();
+            timer.Interval = Settings.Timeout * 1000;//fix
+            timer.Elapsed += new ElapsedEventHandler(DebitAllCars);
+            timer.Enabled = true;
         }
     }
 }

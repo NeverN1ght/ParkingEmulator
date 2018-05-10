@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkingEmulator.Core", "Par
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkingEmulator.Console", "ParkingEmulator.Console\ParkingEmulator.Console.csproj", "{7458CADB-6001-44B8-B268-3431A0510026}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParkingEmulator.Log", "ParkingEmulator.Log\ParkingEmulator.Log.csproj", "{FABE9FF7-6AE3-4B81-B15F-6F062B914D01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{7458CADB-6001-44B8-B268-3431A0510026}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7458CADB-6001-44B8-B268-3431A0510026}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7458CADB-6001-44B8-B268-3431A0510026}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FABE9FF7-6AE3-4B81-B15F-6F062B914D01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FABE9FF7-6AE3-4B81-B15F-6F062B914D01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FABE9FF7-6AE3-4B81-B15F-6F062B914D01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FABE9FF7-6AE3-4B81-B15F-6F062B914D01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

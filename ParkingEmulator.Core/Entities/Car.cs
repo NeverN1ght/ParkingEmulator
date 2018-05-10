@@ -9,5 +9,17 @@ namespace ParkingEmulator.Core.Entities
         public decimal CarBalance { get; set; }
 
         public CarType Type { get; set; }
+
+        public Car(int id, decimal carBalance, CarType type)
+        {
+            Id = id;
+            CarBalance = carBalance;
+            Type = type;
+        }
+
+        public override string ToString()
+        {
+            return $"{Id}|{CarBalance}|{Type}";
+        }
     }
 }

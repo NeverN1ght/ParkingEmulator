@@ -21,5 +21,10 @@ namespace ParkingEmulator.Core.Entities
             Funds = funds;
             Type = type;
         }
+
+        public override string ToString()
+        {
+            return $"{TransactionTime}|{CarId}|{Type}|{Funds}";
+        }
     }
 }

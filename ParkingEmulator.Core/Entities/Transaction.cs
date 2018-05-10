@@ -1,8 +1,9 @@
-﻿using System;
+﻿using ParkingEmulator.Core.Interfaces;
+using System;
 
 namespace ParkingEmulator.Core.Entities
 {
-    public class Transaction
+    public class Transaction: ITransaction
     {
         public DateTime TransactionTime { get; set; }
 

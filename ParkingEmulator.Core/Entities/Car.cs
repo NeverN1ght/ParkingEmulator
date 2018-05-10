@@ -1,6 +1,8 @@
-﻿namespace ParkingEmulator.Core.Entities
+﻿using ParkingEmulator.Core.Interfaces;
+
+namespace ParkingEmulator.Core.Entities
 {
-    public class Car
+    public class Car: ICar
     {
         public int Id { get; set; }
 

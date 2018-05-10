@@ -8,10 +8,10 @@ namespace ParkingEmulator.Core.Kernel
     {
         public static TimeSpan Timeout { get; set; }
 
-        public static Dictionary<CarType, decimal> MyProperty { get; set; }
+        public static Dictionary<CarType, decimal> Prices { get; set; }
 
-        public static uint ParkingSpace { get; set; }
+        public static uint ParkingSpace { get; set; } = 10; //fix
 
-        public static double Fine { get; set; }
+        public static int Fine { get; set; } = 2;// fix
     }
 }

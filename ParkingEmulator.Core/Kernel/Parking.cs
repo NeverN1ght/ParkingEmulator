@@ -164,7 +164,7 @@ namespace ParkingEmulator.Core.Kernel
         {
             if(Transactions.Count > 0)
             {
-                Transactions.RemoveAll(t => DateTime.Now - t.TransactionTime > TimeSpan.FromMinutes(3));
+                Transactions.RemoveAll(t => DateTime.Now - t.TransactionTime >= TimeSpan.FromMinutes(2));
             }
         }
 

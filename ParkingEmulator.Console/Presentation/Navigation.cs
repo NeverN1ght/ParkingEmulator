@@ -2,6 +2,7 @@
 using System;
 using static System.Console;
 using static ParkingEmulator.Console.Presentation.Menu;
+using static ParkingEmulator.Console.Decoration.MenuDecoration;
 using ParkingEmulator.Console.Facades;
 using ParkingEmulator.Console.Exceptions;
 
@@ -47,14 +48,14 @@ namespace ParkingEmulator.Console.Presentation
                 }
                 catch (WrongSwitchItemException ex)
                 {
-                    WriteLine("Error: " + ex.Message);
-                    WriteLine("Please enter any key to continue...");
+                    WriteLineError("Error: " + ex.Message);
+                    WriteLine("\nPlease enter any key to continue...");
                     ReadKey();
                 }
                 catch (FormatException)
                 {
-                    WriteLine("Error: Invalid value");
-                    WriteLine("Please enter any key to continue...");
+                    WriteLineError("Error: Invalid value");
+                    WriteLine("\nPlease enter any key to continue...");
                     ReadKey();
                 }
             }
@@ -93,15 +94,15 @@ namespace ParkingEmulator.Console.Presentation
             }
             catch (WrongSwitchItemException ex)
             {
-                WriteLine("Error: " + ex.Message);
-                WriteLine("Please enter any key to continue...");
+                WriteLineError("Error: " + ex.Message);
+                WriteLine("\nPlease enter any key to continue...");
                 ReadKey();
                 SelectedCars();
             }
             catch (FormatException)
             {
-                WriteLine("Error: Invalid value");
-                WriteLine("Please enter any key to continue...");
+                WriteLineError("Error: Invalid value");
+                WriteLine("\nPlease enter any key to continue...");
                 ReadKey();
                 SelectedCars();
             }
@@ -135,15 +136,15 @@ namespace ParkingEmulator.Console.Presentation
             }
             catch (WrongSwitchItemException ex)
             {
-                WriteLine("Error: " + ex.Message);
-                WriteLine("Please enter any key to continue...");
+                WriteLineError("Error: " + ex.Message);
+                WriteLine("\nPlease enter any key to continue...");
                 ReadKey();
                 SelectedTransactions();
             }
             catch (FormatException)
             {
-                WriteLine("Error: Invalid value");
-                WriteLine("Please enter any key to continue...");
+                WriteLineError("Error: Invalid value");
+                WriteLine("\nPlease enter any key to continue...");
                 ReadKey();
                 SelectedTransactions();
             }
@@ -162,18 +163,15 @@ namespace ParkingEmulator.Console.Presentation
                 switch (operation)
                 {
                     case 1:
-                        facade.ChangeTimeout();
-                        break;
-                    case 2:
                         facade.ChangePrices();
                         break;
-                    case 3:
+                    case 2:
                         facade.ChangeParkingSpace();
                         break;
-                    case 4:
+                    case 3:
                         facade.ChangeFine();
                         break;
-                    case 5:
+                    case 4:                    
                         break;
                     default:
                         throw new WrongSwitchItemException("Wrong operation!");
@@ -181,15 +179,15 @@ namespace ParkingEmulator.Console.Presentation
             }
             catch (WrongSwitchItemException ex)
             {
-                WriteLine("Error: " + ex.Message);
-                WriteLine("Please enter any key to continue...");
+                WriteLineError("Error: " + ex.Message);
+                WriteLine("\nPlease enter any key to continue...");
                 ReadKey();
                 SelectedSettings();
             }
             catch (FormatException)
             {
-                WriteLine("Error: Invalid value");
-                WriteLine("Please enter any key to continue...");
+                WriteLineError("Error: Invalid value");
+                WriteLine("\nPlease enter any key to continue...");
                 ReadKey();
                 SelectedSettings();
             }
@@ -197,7 +195,9 @@ namespace ParkingEmulator.Console.Presentation
 
         public static void SelectedAbout()
         {
-            ShowAbout(); 
+            ShowAbout();
+            WriteLine("\nPlease enter any key to continue...");
+            ReadKey();
         }
     }
 }

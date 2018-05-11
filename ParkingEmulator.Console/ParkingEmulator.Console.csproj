@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Decoration\MenuDecoration.cs" />
     <Compile Include="Exceptions\WrongSwitchItemException.cs" />
     <Compile Include="Facades\ParkingFacade.cs" />
     <Compile Include="Presentation\Menu.cs" />
@@ -62,8 +63,6 @@
       <Name>ParkingEmulator.Log</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Decoration\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -5,11 +5,9 @@ using ParkingEmulator.Core.Exceptions;
 using ParkingEmulator.Core.Kernel;
 using ParkingEmulator.Log.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using static System.Console;
+using static ParkingEmulator.Console.Decoration.MenuDecoration;
 
 namespace ParkingEmulator.Console.Facades
 {
@@ -24,51 +22,46 @@ namespace ParkingEmulator.Console.Facades
 
         public void AddNewCar()
         {
-            CarType carType = CarType.Passenger; //by default
+            CarType carType = CarType.Passenger; 
             WriteLine($"1 - {CarType.Passenger.ToString()}; 2 - {CarType.Truck.ToString()}; 3 - {CarType.Bus.ToString()}; 4 - {CarType.Motorcycle.ToString()}");
             Write("Enter car type: ");
+            var type = int.Parse(ReadLine());
+            switch (type)
+            {
+                case 1:
+                    carType = CarType.Passenger;
+                    break;
+                case 2:
+                    carType = CarType.Truck;
+                    break;
+                case 3:
+                    carType = CarType.Bus;
+                    break;
+                case 4:
+                    carType = CarType.Motorcycle;
+                    break;
+                default:
+                    throw new WrongSwitchItemException("Wrong car type!");
+            }
+            Write("Enter start balance: ");
+            var startBalance = decimal.Parse(ReadLine());
+            if (startBalance <= 0)
+                throw new FormatException();
             try
             {
-                var type = int.Parse(ReadLine());
-                switch (type)
-                {
-                    case 1:
-                        carType = CarType.Passenger;
-                        break;
-                    case 2:
-                        carType = CarType.Truck;
-                        break;
-                    case 3:
-                        carType = CarType.Bus;
-                        break;
-                    case 4:
-                        carType = CarType.Motorcycle;
-                        break;
-                    default:
-                        throw new WrongSwitchItemException("Wrong car type!");
-                }
-                Write("Enter start balance: ");
-                var startBalance = decimal.Parse(ReadLine());
                 _parking.AddCar(new Car(startBalance, carType));
-                WriteLine("Success!");
-                WriteLine("Please enter any key to continue...");
+                WriteLineSuccess("Success!");
+                WriteLine("\nPlease enter any key to continue...");
                 ReadKey();
                 Navigation.SelectedCars();
             }
-            catch (WrongSwitchItemException ex)
+            catch (NotEnoughParkingSpaceException ex)
             {
-                WriteLine("Error: " + ex.Message);
-                WriteLine("Please enter any key to continue...");
+                WriteLineError("Error: " + ex.Message);
+                WriteLine("\nPlease enter any key to continue...");
                 ReadKey();
                 Navigation.SelectedCars();
-            }
-            catch (FormatException)
-            {
-                WriteLine("Error: Invalid value");
-                WriteLine("Please enter any key to continue...");
-                ReadKey();
-                Navigation.SelectedCars();
-            }
+            }     
         }
 
         public void RemoveExistingCar()
@@ -78,26 +71,22 @@ namespace ParkingEmulator.Console.Facades
             {
                 var id = int.Parse(ReadLine());
                 _parking.RemoveCar(_parking.FindCarById(id));
-                WriteLine("Success!");
-            }
-            catch (FormatException)
-            {
-                WriteLine("Error: Invalid value");
-                WriteLine("Please enter any key to continue...");
+                WriteLineSuccess("Success!");
+                WriteLine("\nPlease enter any key to continue...");
                 ReadKey();
                 Navigation.SelectedCars();
             }
             catch (NotExistException ex)
             {
-                WriteLine(ex.Message);
-                WriteLine("Please enter any key to continue...");
+                WriteLineError("Error: " + ex.Message);
+                WriteLine("\nPlease enter any key to continue...");
                 ReadKey();
                 Navigation.SelectedCars();
             }
             catch (FinedCarException ex)
             {
-                WriteLine(ex.Message);
-                WriteLine("Please enter any key to continue...");
+                WriteLineError("Error: " + ex.Message);
+                WriteLine("\nPlease enter any key to continue...");
                 ReadKey();
                 Navigation.SelectedCars();
             }
@@ -112,26 +101,22 @@ namespace ParkingEmulator.Console.Facades
                 Write("Enter funds: ");
                 var funds = decimal.Parse(ReadLine());
                 _parking.AddBalance(id, funds);
-                WriteLine("Success!");
-            }
-            catch (FormatException)
-            {
-                WriteLine("Error: Invalid value");
-                WriteLine("Please enter any key to continue...");
+                WriteLineSuccess("Success!");
+                WriteLine("\nPlease enter any key to continue...");
                 ReadKey();
                 Navigation.SelectedCars();
             }
             catch (NotExistException ex)
             {
-                WriteLine(ex.Message);
-                WriteLine("Please enter any key to continue...");
+                WriteLineError("Error: " + ex.Message);
+                WriteLine("\nPlease enter any key to continue...");
                 ReadKey();
                 Navigation.SelectedCars();
             }
             catch (ArgumentException ex)
             {
-                WriteLine(ex.Message);
-                WriteLine("Please enter any key to continue...");
+                WriteLineError("Error: " + ex.Message);
+                WriteLine("\nPlease enter any key to continue...");
                 ReadKey();
                 Navigation.SelectedCars();
             }
@@ -139,11 +124,13 @@ namespace ParkingEmulator.Console.Facades
 
         public void ShowCarsList()
         {
+            WriteLine("Car id|Type      |Balance");
+            WriteLine("----------------------------------------");
             foreach (var car in _parking.Cars)
             {
                 WriteLine(car.ToString());
             }
-            WriteLine("Please enter any key to continue...");
+            WriteLine("\nPlease enter any key to continue...");
             ReadKey();
             Navigation.SelectedCars();
         }
@@ -151,67 +138,101 @@ namespace ParkingEmulator.Console.Facades
         public void ShowFreeParkingPlaces()
         {
             WriteLine($"{_parking.GetFreeParkingPlaces()} places available!");
-            WriteLine("Please enter any key to continue...");
+            WriteLine("\nPlease enter any key to continue...");
             ReadKey();
             Navigation.SelectedCars();
         }
 
         public void ShowLastMinuteTransactions()
         {
+            WriteLine("Transaction time   |Car id|Type   |Funds");
+            WriteLine("----------------------------------------");
             foreach(var transaction in _parking.GetLastMinuteTransactions())
             {
                 WriteLine(transaction.ToString());
             }
-            WriteLine("Please enter any key to continue...");
+            WriteLine("\nPlease enter any key to continue...");
             ReadKey();
             Navigation.SelectedTransactions();
         }
 
         public void ShowTransactionsHistory()
         {
-            foreach(var transaction in TransactionLogger.ReadTransactionLog())
+            try
             {
-                WriteLine(transaction.ToString());
+                WriteLine("Transaction time   |Car id|Type   |Funds");
+                WriteLine("----------------------------------------");
+                foreach (var transaction in TransactionLogger.ReadTransactionLog())
+                {
+                    WriteLine(transaction.ToString());
+                }
             }
-            WriteLine("Please enter any key to continue...");
+            catch (FileNotFoundException ex)
+            {
+                WriteLine("Error: " + ex.Message);
+            }
+            WriteLine("\nPlease enter any key to continue...");
             ReadKey();
             Navigation.SelectedTransactions();
         }
 
         public void ShowEarnedBalance()
         {
-            WriteLine($"Total earned: {_parking.EarnedBalance}");
-            WriteLine("Please enter any key to continue...");
+            WriteLine($"Total earned: {_parking.EarnedBalance}$");
+            WriteLine("\nPlease enter any key to continue...");
             ReadKey();
             Navigation.SelectedTransactions();
         }
 
-        public void ChangeTimeout()
-        {
-            Write($"Enter new timeout value(current: {Settings.Timeout}): ");
-            var timeout = int.Parse(ReadLine());
-            if (timeout <= 0)
-                throw new FormatException("Wrong value!");
-            Settings.Timeout = timeout;
-            WriteLine("Success!");
-            WriteLine("Please enter any key to continue...");
-            ReadKey();
-            Navigation.SelectedSettings();
-        }
-
         public void ChangePrices()
         {
-            Write($"Current prices per {Settings.Timeout} seconds:");
-            Write($"1.{CarType.Truck} = {Settings.Prices[CarType.Truck]}$");
-            Write($" 2.{CarType.Passenger} = {Settings.Prices[CarType.Passenger]}$");
-            Write($" 3.{CarType.Bus} = {Settings.Prices[CarType.Bus]}$");
-            Write($" 4.{CarType.Motorcycle} = {Settings.Prices[CarType.Motorcycle]}$");
+            WriteLine($"Current price per {Settings.Timeout} seconds:");
+            WriteLine($"  1.{CarType.Truck} = {Settings.Prices[CarType.Truck]}$");
+            WriteLine($"  2.{CarType.Passenger} = {Settings.Prices[CarType.Passenger]}$");
+            WriteLine($"  3.{CarType.Bus} = {Settings.Prices[CarType.Bus]}$");
+            WriteLine($"  4.{CarType.Motorcycle} = {Settings.Prices[CarType.Motorcycle]}$");
+            Write("Select car type: ");
             var type = int.Parse(ReadLine());
+            int price;
             switch(type)
             {
-                //some actions
+                case 1:
+                    Write($"Enter new price for {CarType.Truck}: ");
+                    price = int.Parse(ReadLine());
+                    if (price > 0)
+                        Settings.Prices[CarType.Truck] = price;
+                    else
+                        throw new FormatException();
+                    break;
+                case 2:
+                    Write($"Enter new price for {CarType.Passenger}: ");
+                    price = int.Parse(ReadLine());
+                    if (price > 0)
+                        Settings.Prices[CarType.Passenger] = price;
+                    else
+                        throw new FormatException();
+                    break;
+                case 3:
+                    Write($"Enter new price for {CarType.Bus}: ");
+                    price = int.Parse(ReadLine());
+                    if (price > 0)
+                        Settings.Prices[CarType.Bus] = price;
+                    else
+                        throw new FormatException();
+                    break;
+                case 4:
+                    Write($"Enter new price for {CarType.Motorcycle}: ");
+                    price = int.Parse(ReadLine());
+                    if (price > 0)
+                        Settings.Prices[CarType.Motorcycle] = price;
+                    else
+                        throw new FormatException();
+                    break;
+                default:
+                    throw new WrongSwitchItemException("Wrong car type!");
             }
-            WriteLine("Please enter any key to continue...");
+            WriteLineSuccess("Success!");
+            WriteLine("\nPlease enter any key to continue...");
             ReadKey();
             Navigation.SelectedSettings();
         }
@@ -219,25 +240,37 @@ namespace ParkingEmulator.Console.Facades
         public void ChangeParkingSpace()
         {
             Write($"Enter new parking space value(current: {Settings.ParkingSpace}): ");
-            var space = uint.Parse(ReadLine());
-            Settings.ParkingSpace = space;
-            WriteLine("Success!");
-            WriteLine("Please enter any key to continue...");
-            ReadKey();
-            Navigation.SelectedSettings();
+            try
+            {
+                var space = uint.Parse(ReadLine());
+                if (space <= 0)
+                    throw new FormatException();
+                Settings.ParkingSpace = space;
+                WriteLineSuccess("Success!");
+                WriteLine("\nPlease enter any key to continue...");
+                ReadKey();
+                Navigation.SelectedSettings();
+            }
+            catch (OverflowException)
+            {
+                WriteLineError("Error: Invalid value");
+                WriteLine("\nPlease enter any key to continue...");
+                ReadKey();
+                Navigation.SelectedSettings();
+            }
         }
 
         public void ChangeFine()
         {
             Write($"Enter new fine value(current: {Settings.Fine}): ");
-            var fine = double.Parse(ReadLine());
+            var fine = decimal.Parse(ReadLine());
+            if (fine <= 0)
+                throw new FormatException();
             Settings.Fine = fine;
-            WriteLine("Success!");
-            WriteLine("Please enter any key to continue...");
+            WriteLineSuccess("Success!");
+            WriteLine("\nPlease enter any key to continue...");
             ReadKey();
-            Navigation.SelectedSettings();
+            Navigation.SelectedSettings();  
         }
-
-
     }
 }

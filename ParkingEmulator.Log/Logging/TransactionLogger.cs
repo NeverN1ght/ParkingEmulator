@@ -1,6 +1,5 @@
 ﻿using ParkingEmulator.Core.Interfaces;
 using ParkingEmulator.Core.Kernel;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Timers;
@@ -11,7 +10,7 @@ namespace ParkingEmulator.Log.Logging
     {
         private static void WriteTransactionLog(List<ITransaction> transactions)
         {
-            using (StreamWriter sw = new StreamWriter("../../../Logs/Transactions.log", true))
+            using (StreamWriter sw = new StreamWriter("../../../Transactions.log", true))
             {
                 foreach (var transaction in transactions)
                 {
@@ -24,7 +23,7 @@ namespace ParkingEmulator.Log.Logging
         {
             var transactions = new List<string>();
             string line;
-            using (StreamReader sr = new StreamReader("../../../Logs/Transactions.log"))
+            using (StreamReader sr = new StreamReader("../../../Transactions.log"))
             {
                 while ((line = sr.ReadLine()) != null)
                 {

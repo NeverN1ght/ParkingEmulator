@@ -1,5 +1,4 @@
 ﻿using ParkingEmulator.Core.Entities;
-using System;
 using System.Collections.Generic;
 
 namespace ParkingEmulator.Core.Kernel
@@ -12,10 +11,9 @@ namespace ParkingEmulator.Core.Kernel
 
         public static uint ParkingSpace { get; set; }
 
-        public static double Fine { get; set; }
+        public static decimal Fine { get; set; }
 
 
-        //initialize default values
         static Settings()
         {
             Timeout = 3;
@@ -27,7 +25,7 @@ namespace ParkingEmulator.Core.Kernel
                 {CarType.Motorcycle, 1 }
             };
             ParkingSpace = 10;
-            Fine = 1.5;
+            Fine = 1.5m;
         }
     }
 }

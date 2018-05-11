@@ -132,8 +132,7 @@ namespace ParkingEmulator.Core.Kernel
             }
             else
             {
-                car.CarBalance -= (decimal)((double)Settings.Prices[car.Type] * Settings.Fine);//fix
-                EarnedBalance += (decimal)((double)Settings.Prices[car.Type] * Settings.Fine);
+                car.CarBalance -= Settings.Prices[car.Type] * Settings.Fine;
                 AddTransaction(new Transaction(
                     DateTime.Now, 
                     car.Id, 
@@ -156,7 +155,7 @@ namespace ParkingEmulator.Core.Kernel
         private void DebitInit()
         {
             var timer = new Timer();
-            timer.Interval = Settings.Timeout * 1000;//fix
+            timer.Interval = Settings.Timeout * 1000;
             timer.Elapsed += new ElapsedEventHandler(DebitAllCars);
             timer.Enabled = true;
         }

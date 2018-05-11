@@ -18,7 +18,23 @@ namespace ParkingEmulator.Core.Entities
 
         public override string ToString()
         {
-            return $"{Id}|{CarBalance}|{Type}";
+            string car = null;
+            switch (Type)
+            {
+                case CarType.Bus:
+                    car = $" {Id}    |{Type}       |{CarBalance}$";
+                    break;
+                case CarType.Motorcycle:
+                    car = $" {Id}    |{Type}|{CarBalance}$";
+                    break;
+                case CarType.Passenger:
+                    car = $" {Id}    |{Type} |{CarBalance}$";
+                    break;
+                case CarType.Truck:
+                    car = $" {Id}    |{Type}     |{CarBalance}$";
+                    break;
+            }
+            return car;
         }
     }
 }

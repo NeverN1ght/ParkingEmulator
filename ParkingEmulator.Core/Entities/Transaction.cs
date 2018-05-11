@@ -24,7 +24,20 @@ namespace ParkingEmulator.Core.Entities
 
         public override string ToString()
         {
-            return $"{TransactionTime}|{CarId}|{Type}|{Funds}";
+            string transaction = null;
+            switch(Type)
+            {
+                case TransactionType.Deposit:
+                    transaction = $"{TransactionTime}|{CarId}     |{Type}|+{Funds}$";
+                    break;
+                case TransactionType.Debit:
+                    transaction = $"{TransactionTime}|{CarId}     |{Type}  |-{Funds}$";
+                    break;
+                case TransactionType.Fine:
+                    transaction = $"{TransactionTime}|{CarId}     |{Type}   |-{Funds}$";
+                    break;
+            }
+            return transaction;
         }
     }
 }

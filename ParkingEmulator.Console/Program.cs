@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ParkingEmulator.Console.Presentation;
+using ParkingEmulator.Core.Kernel;
+using ParkingEmulator.Log.Logging;
 
 namespace ParkingEmulator.Console
 {
@@ -10,6 +8,10 @@ namespace ParkingEmulator.Console
     {
         static void Main(string[] args)
         {
+            var parking = Parking.GetInstance;
+
+            TransactionLogger.LogInit();
+            Navigation.RunMenu(parking); 
         }
     }
 }

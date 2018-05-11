@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7458CADB-6001-44B8-B268-3431A0510026}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>ParkingEmulator.Console</RootNamespace>
-    <AssemblyName>ParkingEmulator.Console</AssemblyName>
+    <ProjectGuid>{FABE9FF7-6AE3-4B81-B15F-6F062B914D01}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ParkingEmulator.Log</RootNamespace>
+    <AssemblyName>ParkingEmulator.Log</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -42,27 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Decoration\MenuDecoration.cs" />
-    <Compile Include="Exceptions\WrongSwitchItemException.cs" />
-    <Compile Include="Facades\ParkingFacade.cs" />
-    <Compile Include="Presentation\Menu.cs" />
-    <Compile Include="Presentation\Navigation.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Logging\TransactionLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ParkingEmulator.Core\ParkingEmulator.Core.csproj">
       <Project>{AB1F0CF7-CD63-4311-AF41-262FD3931252}</Project>
       <Name>ParkingEmulator.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ParkingEmulator.Log\ParkingEmulator.Log.csproj">
-      <Project>{FABE9FF7-6AE3-4B81-B15F-6F062B914D01}</Project>
-      <Name>ParkingEmulator.Log</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

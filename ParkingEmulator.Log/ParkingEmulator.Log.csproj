@@ -43,5 +43,11 @@
     <Compile Include="Logging\TransactionLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ParkingEmulator.Core\ParkingEmulator.Core.csproj">
+      <Project>{AB1F0CF7-CD63-4311-AF41-262FD3931252}</Project>
+      <Name>ParkingEmulator.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

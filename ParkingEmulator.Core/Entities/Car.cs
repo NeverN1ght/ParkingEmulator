@@ -10,9 +10,8 @@ namespace ParkingEmulator.Core.Entities
 
         public CarType Type { get; set; }
 
-        public Car(int id, decimal carBalance, CarType type)
+        public Car(decimal carBalance, CarType type)
         {
-            Id = id;
             CarBalance = carBalance;
             Type = type;
         }

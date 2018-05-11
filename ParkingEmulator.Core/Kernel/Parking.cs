@@ -1,4 +1,5 @@
 ﻿using ParkingEmulator.Core.Entities;
+using ParkingEmulator.Core.Exceptions;
 using ParkingEmulator.Core.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -23,10 +24,10 @@ namespace ParkingEmulator.Core.Kernel
 
         private Parking()
         {
-            Cars = new List<ICar>(); //need to load from db;
-            //EarnedBalance load or 0
+            Cars = new List<ICar>();
             Transactions = new List<ITransaction>();
             DebitInit();
+            RemoveOldInit();
         }
        
         //----
@@ -35,47 +36,69 @@ namespace ParkingEmulator.Core.Kernel
         {
             if (Cars.Count + 1 <= Settings.ParkingSpace)
             {
+                if (Cars.Count > 0)
+                {
+                    car.Id = Cars.FindLast(c => c is ICar).Id + 1;
+                }
+                else
+                {
+                    car.Id = 1;
+                }
                 Cars.Add(car);
             }
             else
             {
-                throw new Exception(); //implement
+                throw new NotEnoughParkingSpaceException("Not enough parking space!");
             }
         }
 
         public void RemoveCar(ICar car)
         {
-            if (IsCarExist(car.Id))
+            if (car.CarBalance > 0)
             {
                 Cars.Remove(car);
             }
             else
             {
-                throw new Exception();//implement
+                throw new FinedCarException("Can't remove fined car!");
+            }
+        }
+
+        public ICar FindCarById(int id)
+        {
+            if (IsCarExist(id))
+            {
+                return Cars.Find(c => c.Id == id);
+            }
+            else
+            {
+                throw new NotExistException("Car not found!");
             }
         }
 
         public void AddBalance(int carId, decimal funds)
         {
-            if (IsCarExist(carId))
+            if (funds > 0)
             {
-                Cars.Find(c => c.Id == carId).CarBalance += funds;
-                AddTransaction(new Transaction(DateTime.Now, carId, funds, TransactionType.Deposit));
+                if (IsCarExist(carId))
+                {
+                    Cars.Find(c => c.Id == carId).CarBalance += funds;
+                    AddTransaction(new Transaction(DateTime.Now, carId, funds, TransactionType.Deposit));
+                }
+                else
+                {
+                    throw new NotExistException("Car not found!");
+                }
             }
             else
             {
-                throw new Exception(); //need to add NotFoundException
+                throw new ArgumentException("Wrong funds value!");
             }
         }
 
-        public IEnumerable<ITransaction> GetLastMinuteTransactions()
+        public List<ITransaction> GetLastMinuteTransactions()
         {
             return Transactions.FindAll(t => DateTime.Now - t.TransactionTime <= TimeSpan.FromMinutes(1));
-        }
-
-        public string[] GetAllTransactionsFromLog()
-        {
-            return null;
         }
 
         public uint GetFreeParkingPlaces()
@@ -126,17 +149,31 @@ namespace ParkingEmulator.Core.Kernel
                 foreach (var car in Cars)
                 {
                     DebitCar(car);
-                    Console.WriteLine(car.CarBalance);
                 }
             }
-
         }
-        
+
         private void DebitInit()
         {
             var timer = new Timer();
             timer.Interval = Settings.Timeout * 1000;//fix
             timer.Elapsed += new ElapsedEventHandler(DebitAllCars);
+            timer.Enabled = true;
+        }
+
+        private void RemoveAllOldTransactions(object source, ElapsedEventArgs e)
+        {
+            if(Transactions.Count > 0)
+            {
+                Transactions.RemoveAll(t => DateTime.Now - t.TransactionTime > TimeSpan.FromMinutes(3));
+            }
+        }
+
+        private void RemoveOldInit()
+        {
+            var timer = new Timer();
+            timer.Interval = 180000;
+            timer.Elapsed += new ElapsedEventHandler(RemoveAllOldTransactions);
             timer.Enabled = true;
         }
     }

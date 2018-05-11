@@ -44,11 +44,15 @@
     <Compile Include="Entities\CarType.cs" />
     <Compile Include="Entities\Transaction.cs" />
     <Compile Include="Entities\TransactionType.cs" />
+    <Compile Include="Exceptions\FinedCarException.cs" />
+    <Compile Include="Exceptions\NotEnoughParkingSpaceException.cs" />
+    <Compile Include="Exceptions\NotExistException.cs" />
     <Compile Include="Interfaces\ICar.cs" />
     <Compile Include="Interfaces\ITransaction.cs" />
     <Compile Include="Kernel\Parking.cs" />
     <Compile Include="Kernel\Settings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

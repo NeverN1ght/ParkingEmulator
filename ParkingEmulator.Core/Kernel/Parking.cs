@@ -34,11 +34,12 @@ namespace ParkingEmulator.Core.Kernel
 
         public void AddCar(ICar car)
         {
-            if (Cars.Count + 1 <= Settings.ParkingSpace)
+            if (Cars.Count != Settings.ParkingSpace)
             {
                 if (Cars.Count > 0)
                 {
-                    car.Id = Cars.FindLast(c => c is ICar).Id + 1;
+                    var lastCarIndex = Cars.FindLastIndex(c => c is ICar);
+                    car.Id = lastCarIndex + 1;
                 }
                 else
                 {

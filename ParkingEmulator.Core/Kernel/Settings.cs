@@ -13,6 +13,8 @@ namespace ParkingEmulator.Core.Kernel
 
         public static decimal Fine { get; set; }
 
+        public static string LogFileName { get; set; }
+
 
         static Settings()
         {
@@ -26,6 +28,7 @@ namespace ParkingEmulator.Core.Kernel
             };
             ParkingSpace = 10;
             Fine = 1.5m;
+            LogFileName = "Transactions.log";
         }
     }
 }

@@ -10,7 +10,7 @@ namespace ParkingEmulator.Log.Logging
     {
         private static void WriteTransactionLog(List<ITransaction> transactions)
         {
-            using (StreamWriter sw = new StreamWriter("../../../Transactions.log", true))
+            using (StreamWriter sw = new StreamWriter("../../../" + Settings.LogFileName, true))
             {
                 foreach (var transaction in transactions)
                 {
@@ -23,7 +23,7 @@ namespace ParkingEmulator.Log.Logging
         {
             var transactions = new List<string>();
             string line;
-            using (StreamReader sr = new StreamReader("../../../Transactions.log"))
+            using (StreamReader sr = new StreamReader("../../../" + Settings.LogFileName))
             {
                 while ((line = sr.ReadLine()) != null)
                 {
